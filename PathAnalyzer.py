@@ -1,5 +1,6 @@
 import networkx as nx
 import matplotlib.pyplot as plt
+from DijkstrasWithExplored import dijkstra_explored
 
 def generateGraphFromShapefile(filename):
     plt.rcParams["figure.figsize"] = (50,20)
@@ -32,12 +33,18 @@ def generateGraphFromShapefile(filename):
     X.add_edges_from(newedg)
     return X, pos, minX, maxX, minY, maxY
 
-def plotMap(X, path, pos, minX, maxX, minY, maxY):
+def plotMap(X, path,explored, pos, minX, maxX, minY, maxY):
     print("Done adding edges")
-    nx.draw_networkx_nodes(X,pos,node_size=1,node_color='r')
-    nx.draw_networkx_edges(X,pos, width=1, edge_color='r')
+    nx.draw_networkx_nodes(X,pos,node_size=1,node_color='k')
+    nx.draw_networkx_edges(X,pos, width=1, edge_color='k')
+    nx.draw_networkx_nodes(explored, pos, node_size=1, node_color = "r")
+    nx.draw_networkx_edges(explored,pos, width=1, edge_color = "r")
+
     nx.draw_networkx_nodes(path, pos, node_size=1, node_color='g')
     nx.draw_networkx_edges(path,pos, width=1, edge_color='g')
+    startGraph = nx.Graph()
+    startGraph.add_node(list(path)[0])
+    nx.draw_networkx_nodes(startGraph,pos, node_size=1, node_color='b')
     print("Done Drawing Edges")
     plt.xlim(minX, maxX) #This changes and is problem specific
     plt.ylim(minY, maxY) #This changes and is problem specific
@@ -46,22 +53,24 @@ def plotMap(X, path, pos, minX, maxX, minY, maxY):
     plt.title('From shapefiles to NetworkX')
     plt.show()
 
-def getShortestPathGraph(graph):
+def getShortestPathGraph(graph, pos, start, end):
     nodesList = list(graph.nodes())
-    path = nx.dijkstra_path(graph,nodesList[50], nodesList[8740])
-    print(f"path: {path}")
+    #path = nx.dijkstra_path(graph,nodesList[50], nodesList[8740])
+    path, cost, exploredGraph = dijkstra_explored(graph,nodesList[start], nodesList[end], pos)
+    #print(f"path: {path}")
     pathGraph = nx.Graph()
     for i,node in enumerate(list(path)):
         pathGraph.add_node(nodesList[node])
         if i + 1 < len(list(path)):
-            pathGraph.add_edge(nodesList[node], nodesList[list(path)[i + 1]])
-    return pathGraph
+            pathGraph.add_edge(nodesList[node], nodesList[path[i + 1]])
+    return pathGraph, exploredGraph
 
 def main():
     filename = "Data3/Smaller_Roads_V3.shp"
     graph, pos, minX, maxX, minY, maxY = generateGraphFromShapefile(filename)
-    shortestPath = getShortestPathGraph(graph)
-    plotMap(graph, shortestPath, pos,minX,maxX,minY,maxY)
+
+    shortestPath, pathGraph = getShortestPathGraph(graph, pos, 123, 5123)
+    plotMap(graph, shortestPath, pathGraph, pos,minX,maxX,minY,maxY)
 
 if __name__ == "__main__":
     main()
