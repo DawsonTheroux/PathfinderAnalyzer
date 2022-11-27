@@ -1,6 +1,10 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 from DijkstrasWithExplored import dijkstra_explored
+from BreadthFirstSearch import breadthFirstSearchWithExplored
+from DepthFirstSearch  import depthFirstSearchWithExplored
+from AStarWithExplored import aStarWithExplored
+from scipy.spatial import distance
 
 def generateGraphFromShapefile(filename):
     plt.rcParams["figure.figsize"] = (50,20)
@@ -56,7 +60,10 @@ def plotMap(X, path,explored, pos, minX, maxX, minY, maxY):
 def getShortestPathGraph(graph, pos, start, end):
     nodesList = list(graph.nodes())
     #path = nx.dijkstra_path(graph,nodesList[50], nodesList[8740])
-    path, cost, exploredGraph = dijkstra_explored(graph,nodesList[start], nodesList[end], pos)
+    #path, cost, exploredGraph = dijkstra_explored(graph,nodesList[start], nodesList[end], pos)
+    #path, exploredGraph = breadthFirstSearchWithExplored(graph,nodesList[start], nodesList[end], pos)
+    #path, exploredGraph = depthFirstSearchWithExplored(graph,nodesList[start], nodesList[end], pos)
+    path, exploredGraph = aStarWithExplored(graph,nodesList[start], nodesList[end], distance.euclidean, pos)
     #print(f"path: {path}")
     pathGraph = nx.Graph()
     for i,node in enumerate(list(path)):
