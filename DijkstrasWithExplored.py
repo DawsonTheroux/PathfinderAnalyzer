@@ -73,12 +73,12 @@ def dijkstra_explored(graph: 'networkx.classes.graph.Graph', start: str, end: st
                     _ = pq.get((dist[neighbor],neighbor))
                     # insert new
                     pq.put((dist[neighbor],neighbor))
-    print("=== Dijkstra's Algo Output ===")
-    print("Distances")
+    #print("=== Dijkstra's Algo Output ===")
+    #print("Distances")
     #print(dist)
-    print("Visited")
-    print(visited)
-    print("Previous")
-    print(prev)
+    #print("Visited")
+    #print(visited)
+    #print("Previous")
+    #print(prev)
     # we are done after every possible path has been checked 
-    return backtrace(prev, start, end), dist[end], visitedGraph
+    return backtrace(prev, start, end), visitedGraph
