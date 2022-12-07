@@ -1,11 +1,10 @@
 from queue import LifoQueue 
 from math import inf
-# graph dependency  
 import networkx as nx
 from scipy.spatial import distance
 
 def depthFirstSearchWithExplored(graph, start, end, pos):
-    def backtrace(prev, start, end):
+    def findPath(prev, start, end):
         node = end
         path = []
         while node != start:
@@ -42,4 +41,4 @@ def depthFirstSearchWithExplored(graph, start, end, pos):
 
     # Path is a list of node indecies.
     # Visited Graph is a constructed NetworkX graph.
-    return backtrace(prev, start, end), visitedGraph
+    return findPath(prev, start, end), visitedGraph

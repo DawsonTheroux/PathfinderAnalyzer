@@ -1,11 +1,10 @@
 from queue import PriorityQueue
 from math import inf
-# graph dependency  
 import networkx as nx
 from scipy.spatial import distance
 
 def breadthFirstSearchWithExplored(graph, start, end, pos):
-    def backtrace(prev, start, end):
+    def findPath(prev, start, end):
         node = end
         path = []
         while node != start:
@@ -15,9 +14,9 @@ def breadthFirstSearchWithExplored(graph, start, end, pos):
         path.reverse()
         return path
 
-    frontier = []
+    frontier = [] 
     visitedNodes = []
-    prev = {}
+    prev = {}  # The list of node parents
     visitedGraph = nx.Graph()
     graphList = list(nx.nodes(graph))
     frontier.append(start)
@@ -25,10 +24,11 @@ def breadthFirstSearchWithExplored(graph, start, end, pos):
     while(len(frontier) > 0):
         curNode = frontier.pop(0) 
         visitedGraph.add_node(graphList[curNode])
+
         if curNode in prev.keys():
             visitedGraph.add_edge(graphList[curNode], graphList[prev[curNode]])
 
-        if curNode == end:
+        if curNode == end: # Break when we find the end node.
             break
 
         for neighbour in dict(graph.adjacency()).get(curNode):   # For all neighbours of the current Node.
@@ -42,4 +42,4 @@ def breadthFirstSearchWithExplored(graph, start, end, pos):
 
     # Path is a list of node indecies.
     # Visited Graph is a constructed NetworkX graph.
-    return backtrace(prev, start, end), visitedGraph
+    return findPath(prev, start, end), visitedGraph
